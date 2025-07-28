@@ -9,7 +9,7 @@ This project implements an ERC-20 compatible token contract that adds **privacy-
 
 You can test the zkERC20 contract on a  website:
 
-👉 **Website:** [https://zkerc20-demo.example.com]([https://zkerc20-demo.example.com](https://github.com/batublockdev/ZKERC20-FULLSTACK))
+👉 **Website:** [https://zkerc20-demo.example.com](https://github.com/batublockdev/ZKERC20-FULLSTACK))
 
 ---
 
