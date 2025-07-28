@@ -1,66 +1,97 @@
-## Foundry
+# 🕵️‍♂️ zkERC20 – Private ERC20 Token with Zero-Knowledge Transfers
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This project implements an ERC-20 compatible token contract that adds **privacy-preserving transfers** using Zero-Knowledge Proofs (ZKPs). Balances and transfer amounts are hidden, and users must prove correctness of transfers without revealing sensitive data.
 
-Foundry consists of:
+> ⚠️ This is an advanced ERC20 implementation for educational and experimental use. Use at your own risk.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## 🚀 Features
 
-## Documentation
+- ✔️ ERC-20 compliant interface (name, symbol)
+- 🔐 Zero-Knowledge Proof verification for:
+  - Transfers
+  - Token reception
+  - Minting & burning
+- 🔒 Balance hashes instead of clear balances
+- 🧾 Encrypted communication via `msgTransferData`
+- 📬 `signIn()` to register user public keys (for encrypted inbox/messaging)
 
-https://book.getfoundry.sh/
+## 📦 Contract Structure
 
-## Usage
+| Function | Description |
+|----------|-------------|
+| `sendTransfer(...)` | Sends a ZK transfer after verifying the proof |
+| `receiveTransfer(...)` | Accepts an incoming ZK transfer |
+| `signIn(pubKey)` | Registers the sender’s public key |
+| `getInbox(owner)` | Gets the registered public key of another user |
+| `_mint(...)` | Mints tokens using a proof |
+| `_burn(...)` | Burns tokens using a proof |
 
-### Build
+### 🔁 Event
 
-```shell
-$ forge build
+```solidity
+event Transfer(
+  address indexed from,
+  address indexed to,
+  uint256 indexed msgTransation,
+  bytes msgTransferData
+);
 ```
 
-### Test
+This custom Transfer event carries an opaque `msgTransation` ID and encrypted payload `msgTransferData`.
 
-```shell
-$ forge test
+## 🔐 Zero-Knowledge Verifier
+
+The contract connects to a zk-SNARK verifier implementing:
+
+```solidity
+function verifyProof(
+  uint[2] calldata a,
+  uint[2][2] calldata b,
+  uint[2] calldata c,
+  uint[5] calldata input
+) external view returns (bool);
 ```
 
-### Format
-
-```shell
-$ forge fmt
+Verifier input format:
+```
+[operationType, oldBalanceHash, toAddress, msgTransactionId, newBalanceHash]
 ```
 
-### Gas Snapshots
+### Operation Types
 
-```shell
-$ forge snapshot
+| Type     | Value |
+|----------|-------|
+| TRANSFER | 0     |
+| RECEIVE  | 1     |
+
+## 🧪 Usage Notes
+
+- Each transaction must be proven valid off-chain before submitting to the contract.
+- Clients must maintain the current balance hash to calculate new valid states.
+- An off-chain prover (e.g., Circom + snarkjs) is required to generate valid `proof` and `public signals`.
+
+## 🧠 Developer Notes
+
+- Balances are stored as hashed commitments, not clear uint256 amounts.
+- Uses a `pendingTransactions` mapping to prevent replay attacks.
+- No standard `transferFrom` or `allowance` due to ZK privacy constraints.
+
+## 🛠 Setup
+
+This is a Solidity-only contract and assumes an existing ZK proof generation pipeline (e.g., using [Circom](https://docs.circom.io)).
+
+### Interfaces
+
+```solidity
+import {ZPKInterface} from "src/interface/zkp.sol";
 ```
 
-### Anvil
+You'll need to define `ZPKInterface` that matches the proof verification contract.
 
-```shell
-$ anvil
-```
+## 📝 License
 
-### Deploy
+MIT © 2025
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+## 🧑‍💻 Author
 
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Built by batublockdev — inspired by OpenZeppelin + zkSNARKs.
