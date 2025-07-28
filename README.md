@@ -4,6 +4,22 @@ This project implements an ERC-20 compatible token contract that adds **privacy-
 
 > ⚠️ This is an advanced ERC20 implementation for educational and experimental use. Use at your own risk.
 
+## 🌐 Live Demo & Resources
+
+
+You can test the zkERC20 contract on a  website:
+
+👉 **Website:** [https://zkerc20-demo.example.com]([https://zkerc20-demo.example.com](https://github.com/batublockdev/ZKERC20-FULLSTACK))
+
+---
+
+### 🎥 Demo Video
+
+Watch a walkthrough demo of how private transfers work:
+
+📺 **Demo Video:** [https://youtu.be/your-demo-video](https://youtu.be/HPdta0SgB8I?si=QMs_S43tV18qJPlM)
+
+> Upload your demo to YouTube or another platform and update this link.
 ## 🚀 Features
 
 - ✔️ ERC-20 compliant interface (name, symbol)
@@ -94,4 +110,4 @@ MIT © 2025
 
 ## 🧑‍💻 Author
 
-Built by batublockdev — inspired by OpenZeppelin + zkSNARKs.
+Built by BATUBLOCKDEV — inspired by OpenZeppelin + zkSNARKs.
